@@ -2,7 +2,7 @@
 
 An end-to-end Azure data pipeline and Power BI report that uses City of Calgary building permit data to measure how new housing supply changed across three policy periods: before citywide rezoning, during it, and after its repeal.
 
-**[View the live dashboard](PASTE_PUBLISH_TO_WEB_LINK_HERE)**
+**[View the live dashboard](https://app.powerbi.com/view?r=eyJrIjoiYWQ3YmMxY2EtOTAyYS00ZDNkLWE2YzQtOTMxYTFiYjUxNWNkIiwidCI6ImY1MmYyMTgzLTlmNjctNGFkMi1iNjU2LTZmNzU0ZmUxOTZjYiIsImMiOjZ9)**
 
 ![Supply page](page1_supply.png)
 
