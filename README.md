@@ -4,7 +4,7 @@ An end-to-end Azure data pipeline and Power BI report that uses City of Calgary 
 
 **[View the live dashboard](PASTE_PUBLISH_TO_WEB_LINK_HERE)**
 
-![Supply page](page1_supply.png)
+![Supply page](images/page1_supply.png)
 
 ---
 
@@ -85,7 +85,7 @@ Datasets: `ds_http_permits_csv`, `ds_adls_bronze_permits`, `ds_sql_stg_permits`
 
 ## Data model
 
-![Data model](data_model.png)
+![Data model](images/data_model.png)
 
 **Grain:** one building permit that creates housing (`housing_units > 0`), issued on or after Jan 1, 2022.
 
@@ -127,8 +127,8 @@ Suites are tracked separately rather than counted as missing middle, because the
 | **2. Mix** | Missing-middle share by period and average monthly units by housing type, rezoning vs pre-rezoning |
 | **3. Where** | Top 10 communities for missing-middle units and a 3D map of where they are |
 
-![Mix page](page2_mix.png)
-![Where page](page2_mix.png)
+![Mix page](images/page2_mix.png)
+![Where page](images/page3_where.png)
 
 ### Key DAX measures
 
