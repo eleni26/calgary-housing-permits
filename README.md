@@ -59,6 +59,10 @@ flowchart LR
     E --> F["Power BI<br/>report + DAX"]
 ```
 
+All resources sit in one resource group, `rg-calgary-permits`, in Canada Central:
+
+![Azure resource group](azure_resources.png)
+
 Azure Data Factory (`adf-calgary-permits`) orchestrates every step in one pipeline, `pl_ingest_bronze`:
 
 | # | Activity | Type | What it does |
@@ -69,6 +73,8 @@ Azure Data Factory (`adf-calgary-permits`) orchestrates every step in one pipeli
 | 4 | `sp_load_gold` | Stored procedure | Runs `gold.usp_load_gold`: filters, classifies housing type, rebuilds the star schema |
 
 Datasets: `ds_http_permits_csv`, `ds_adls_bronze_permits`, `ds_sql_stg_permits`
+
+![ADF pipeline run](adf_pipeline.png)
 
 **Why stored procedures instead of ADF Data Flows?** Data Flows run on Spark clusters that burn through credits. T-SQL stored procedures do the same transformations at no extra cost.
 
@@ -149,7 +155,7 @@ Suites are tracked separately rather than counted as missing middle, because the
 
 ## Data quality checks
 
-Validation queries run after each load ([`sql/05_validation_checks.sql`](sql/05_validation_checks.sql)). Results from the Nov 9, 2026 load:
+Validation queries run after each load ([`05_validation_checks.sql`](05_validation_checks.sql)). Results from the Nov 9, 2026 load:
 
 | Check | Result |
 |---|---|
@@ -188,41 +194,31 @@ Validation queries run after each load ([`sql/05_validation_checks.sql`](sql/05_
 
 ---
 
-## Repository structure
+## Repository contents
 
-```
-├── README.md
-├── adf/
-│   └── pl_ingest_bronze.json          # pipeline definition
-├── sql/
-│   ├── 01_create_schemas.sql
-│   ├── 02_silver_building_permits.sql
-│   ├── 03_gold_tables.sql
-│   ├── 04_gold_load.sql
-│   └── 05_validation_checks.sql
-├── powerbi/
-│   └── Dashboard.pbix
-└── images/
-    ├── page1_supply.png
-    ├── page2_mix.png
-    ├── page3_where.png
-    └── data_model.png
-```
+| File | What it is |
+|---|---|
+| `01_create_schemas.sql` | Creates the `stg`, `silver` and `gold` schemas |
+| `02_silver_building_permits.sql` | Silver table and load procedure |
+| `03_gold_tables.sql` | Star schema tables |
+| `04_gold_load.sql` | Gold load procedure (housing type classification, dimensions, fact) |
+| `05_validation_checks.sql` | Data quality checks run after each load |
+| `Dashboard.pbix` | Power BI report |
+| `*.png` | Pipeline, data model and report screenshots |
 
 ## How to run it
 
 1. Create a resource group with ADLS Gen2, an Azure SQL Database and an Azure Data Factory.
-2. Run the scripts in `sql/` in order (01 to 04) to create the schemas, tables and procedures.
-3. Import the pipeline from `adf/` and point the linked services at your storage account and database.
+2. Run the SQL scripts in order (01 to 04) to create the schemas, tables and procedures.
+3. Build the `pl_ingest_bronze` pipeline in ADF (two Copy activities and two Stored procedure activities, as described above) and point the linked services at your storage account and database.
 4. Trigger `pl_ingest_bronze`, then run `05_validation_checks.sql`.
-5. Open `powerbi/Dashboard.pbix` and update the data source to your database.
+5. Open `Dashboard.pbix` and update the data source to your database.
 
 ## Tech stack
 
 Azure Data Factory · ADLS Gen2 · Azure SQL Database · T-SQL (CTEs, window functions, stored procedures) · Power BI · DAX · Azure Maps visual
 
 ## Data source
-![ADF pipeline run](adf_pipeline.png)
 
 [City of Calgary Building Permits](https://data.calgary.ca/Business-and-Economic-Activity/Building-Permits/c2es-76ed) (dataset `c2es-76ed`), published by City of Calgary Planning & Development under the Open Government Licence – City of Calgary.
 
